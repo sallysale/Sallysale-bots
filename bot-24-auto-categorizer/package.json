@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-24",
+  "version": "1.0.0",
+  "description": "BOT-24 — Auto Categorizer (GPT-4o-mini)",
+  "type": "module",
+  "main": "bot24.mjs",
+  "scripts": {
+    "start": "node bot24.mjs",
+    "test":  "node bot24.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

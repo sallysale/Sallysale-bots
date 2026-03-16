@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-25",
+  "version": "1.0.0",
+  "description": "BOT-25 — Auto Translator (DeepL API)",
+  "type": "module",
+  "main": "bot25.mjs",
+  "scripts": {
+    "start": "node bot25.mjs",
+    "test":  "node bot25.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

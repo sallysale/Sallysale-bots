@@ -1,0 +1,14 @@
+# railway.toml — קונפיגורציה ל-Railway.app
+# מניח bot-18 כservice נפרד
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node bot18.mjs"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+# cron: פעם ביום בשעה 06:00 UTC (08:00 ישראל)
+# מוגדר ב-Railway dashboard → Service → Settings → Cron
+# ערך: 0 6 * * *

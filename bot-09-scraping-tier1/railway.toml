@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node bot09.mjs"
+cronSchedule = "0 */6 * * *"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-23",
+  "version": "1.0.0",
+  "description": "BOT-23 — Deal Scorer",
+  "type": "module",
+  "main": "bot23.mjs",
+  "scripts": {
+    "start": "node bot23.mjs",
+    "test":  "node bot23.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

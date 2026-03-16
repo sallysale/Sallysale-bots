@@ -1,0 +1,16 @@
+{
+  "name": "sallysale-bot-09",
+  "version": "1.0.0",
+  "description": "BOT-09 — Scraping Tier 1 (H&M, Zara, Mango, IKEA, NET-A-PORTER)",
+  "type": "module",
+  "main": "bot09.mjs",
+  "scripts": {
+    "start": "node bot09.mjs",
+    "test":  "node bot09.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5",
+    "node-html-parser": "^4.0.0"
+  }
+}

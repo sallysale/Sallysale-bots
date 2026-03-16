@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-27",
+  "version": "1.0.0",
+  "description": "BOT-27 — Geo-Pricing",
+  "type": "module",
+  "main": "bot27.mjs",
+  "scripts": {
+    "start": "node bot27.mjs",
+    "test":  "node bot27.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

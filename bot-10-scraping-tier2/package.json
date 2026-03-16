@@ -1,0 +1,16 @@
+{
+  "name": "sallysale-bot-10",
+  "version": "1.0.0",
+  "description": "BOT-10 — Scraping Tier 2 (Fox, Castro, Terminal X, Renuar, ASOS, About You)",
+  "type": "module",
+  "main": "bot10.mjs",
+  "scripts": {
+    "start": "node bot10.mjs",
+    "test":  "node bot10.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5",
+    "node-html-parser": "^4.0.0"
+  }
+}

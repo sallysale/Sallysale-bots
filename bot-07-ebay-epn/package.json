@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-07",
+  "version": "1.0.0",
+  "description": "BOT-07 — eBay EPN Finding API scraper",
+  "type": "module",
+  "main": "bot07.mjs",
+  "scripts": {
+    "start": "node bot07.mjs",
+    "test":  "node bot07.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}
