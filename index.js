@@ -14,12 +14,16 @@
 // ════════════════════════════════════════════════════════════
 
 import 'dotenv/config';
-console.log('ENV CHECK:', Object.keys(process.env).filter(k => k.includes('SUPA')));
 import { existsSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// ── בדיקת סביבה ───────────────────────────────────────────
+const supaUrl = process.env.SUPABASE_URL || '';
+console.log('ENV CHECK — SUPA keys:', Object.keys(process.env).filter(k => k.includes('SUPA')));
+console.log('ENV CHECK — SUPABASE_URL prefix:', supaUrl.slice(0, 4) || '(empty)');
 
 const BOTS = [
   // שכבה 2 — אימות
@@ -41,50 +45,58 @@ const BOTS = [
   { id: 'BOT-10', entry: 'bot-10-scraping-tier2/bot10.mjs'   },
 ];
 
-const targets = process.argv.slice(2);
-const toRun   = targets.length > 0
-  ? BOTS.filter(b => targets.includes(b.id))
-  : BOTS;
+try {
+  const targets = process.argv.slice(2);
+  const toRun   = targets.length > 0
+    ? BOTS.filter(b => targets.includes(b.id))
+    : BOTS;
 
-if (toRun.length === 0) {
-  console.error(`❌ לא נמצאו בוטים: ${targets.join(', ')}`);
+  if (toRun.length === 0) {
+    console.error(`❌ לא נמצאו בוטים: ${targets.join(', ')}`);
+    process.exit(1);
+  }
+
+  console.log(`\n🚀 SallySale Bots — מריץ ${toRun.length} בוטים (in-process)`);
+  console.log('═'.repeat(50));
+
+  let passed = 0;
+  let failed = 0;
+
+  for (const bot of toRun) {
+    const fullPath = path.join(__dirname, bot.entry);
+
+    if (!existsSync(fullPath)) {
+      console.warn(`⚠️  ${bot.id}: קובץ לא נמצא — ${bot.entry}`);
+      failed++;
+      continue;
+    }
+
+    console.log(`\n▶  ${bot.id}...`);
+    const start = Date.now();
+
+    const originalArgv1 = process.argv[1];
+    process.argv[1] = fullPath;
+
+    try {
+      await import(pathToFileURL(fullPath).href);
+      console.log(`✅  ${bot.id} — ${((Date.now() - start) / 1000).toFixed(1)}s`);
+      passed++;
+    } catch (err) {
+      console.error(`❌  ${bot.id} — שגיאה: ${err.message}`);
+      console.error(`    stack: ${err.stack?.split('\n')[1]?.trim() || 'n/a'}`);
+      failed++;
+    } finally {
+      process.argv[1] = originalArgv1;
+    }
+  }
+
+  console.log(`\n${'═'.repeat(50)}`);
+  console.log(`📊 ${passed} הצליחו, ${failed} נכשלו`);
+  if (failed > 0) process.exit(1);
+
+} catch (err) {
+  console.error('❌ FATAL — קריסה כללית ב-coordinator:');
+  console.error('   message:', err.message);
+  console.error('   stack:',   err.stack);
   process.exit(1);
 }
-
-console.log(`\n🚀 SallySale Bots — מריץ ${toRun.length} בוטים (in-process)`);
-console.log('═'.repeat(50));
-
-let passed = 0;
-let failed = 0;
-
-for (const bot of toRun) {
-  const fullPath = path.join(__dirname, bot.entry);
-
-  if (!existsSync(fullPath)) {
-    console.warn(`⚠️  ${bot.id}: קובץ לא נמצא — ${bot.entry}`);
-    failed++;
-    continue;
-  }
-
-  console.log(`\n▶  ${bot.id}...`);
-  const start = Date.now();
-
-  // הגדר process.argv[1] כך שבדיקת isMain בתוך הבוט תעבור
-  const originalArgv1 = process.argv[1];
-  process.argv[1] = fullPath;
-
-  try {
-    await import(pathToFileURL(fullPath).href);
-    console.log(`✅  ${bot.id} — ${((Date.now() - start) / 1000).toFixed(1)}s`);
-    passed++;
-  } catch (err) {
-    console.error(`❌  ${bot.id} — ${err.message}`);
-    failed++;
-  } finally {
-    process.argv[1] = originalArgv1;
-  }
-}
-
-console.log(`\n${'═'.repeat(50)}`);
-console.log(`📊 ${passed} הצליחו, ${failed} נכשלו`);
-if (failed > 0) process.exit(1);
