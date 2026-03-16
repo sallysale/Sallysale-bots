@@ -14,6 +14,7 @@
 // ════════════════════════════════════════════════════════════
 
 import 'dotenv/config';
+console.log('ENV CHECK:', Object.keys(process.env).filter(k => k.includes('SUPA')));
 import { existsSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
