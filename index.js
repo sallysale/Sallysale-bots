@@ -51,10 +51,26 @@ if (toRun.length === 0) {
 console.log(`\n🚀 SallySale Bots — מריץ ${toRun.length} בוטים`);
 console.log('═'.repeat(50));
 
+const env = {
+  ...process.env,
+  SUPABASE_URL:        process.env.SUPABASE_URL,
+  SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
+  SCRAPERAPI_KEY:      process.env.SCRAPERAPI_KEY,
+  OPENAI_API_KEY:      process.env.OPENAI_API_KEY,
+  DEEPL_API_KEY:       process.env.DEEPL_API_KEY,
+  DEEPL_PRO:           process.env.DEEPL_PRO,
+  EBAY_APP_ID:         process.env.EBAY_APP_ID,
+  EBAY_CAMPAIGN_ID:    process.env.EBAY_CAMPAIGN_ID,
+  TRADEDOUBLER_TOKEN:  process.env.TRADEDOUBLER_TOKEN,
+  CJ_WEBSITE_ID:       process.env.CJ_WEBSITE_ID,
+  AWIN_PUBLISHER_ID:   process.env.AWIN_PUBLISHER_ID,
+  EXCHANGE_RATE_KEY:   process.env.EXCHANGE_RATE_KEY,
+};
+
 function runBot(entry) {
   const fullPath = path.join(__dirname, entry);
   return new Promise((resolve, reject) => {
-    const child = spawn('node', [fullPath], { stdio: 'inherit' });
+    const child = spawn('node', [fullPath], { stdio: 'inherit', env });
     child.on('close', code => code === 0 ? resolve() : reject(new Error(`exit ${code}`)));
     child.on('error', reject);
   });
