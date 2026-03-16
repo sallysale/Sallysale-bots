@@ -27,22 +27,22 @@ console.log('ENV CHECK — SUPABASE_URL prefix:', supaUrl.slice(0, 4) || '(empty
 
 const BOTS = [
   // שכבה 2 — אימות
-  { id: 'BOT-17', entry: 'bot-17-price-validator/bot17.mjs'  },
-  { id: 'BOT-18', entry: 'bot-18-price-history/bot18.mjs'    },
-  { id: 'BOT-19', entry: 'bot-19-link-validator/bot19.mjs'   },
-  { id: 'BOT-20', entry: 'bot-20-expiry-detector/bot20.mjs'  },
-  { id: 'BOT-22', entry: 'bot-22-dedup-engine/bot22.mjs'     },
-  { id: 'BOT-23', entry: 'bot-23-deal-scorer/bot23.mjs'      },
+  { id: 'BOT-17', entry: 'bots/bot-17-price-validator/bot17.mjs'  },
+  { id: 'BOT-18', entry: 'bots/bot-18-price-history/bot18.mjs'    },
+  { id: 'BOT-19', entry: 'bots/bot-19-link-validator/bot19.mjs'   },
+  { id: 'BOT-20', entry: 'bots/bot-20-expiry-detector/bot20.mjs'  },
+  { id: 'BOT-22', entry: 'bots/bot-22-dedup-engine/bot22.mjs'     },
+  { id: 'BOT-23', entry: 'bots/bot-23-deal-scorer/bot23.mjs'      },
   // שכבה 3 — ניהול
-  { id: 'BOT-26', entry: 'bot-26-currency-bot/bot26.mjs'     },
-  { id: 'BOT-27', entry: 'bot-27-geo-pricing/bot27.mjs'      },
-  { id: 'BOT-24', entry: 'bot-24-auto-categorizer/bot24.mjs' },
-  { id: 'BOT-25', entry: 'bot-25-auto-translator/bot25.mjs'  },
-  { id: 'BOT-29', entry: 'bot-29-affiliate-sorter/bot29.mjs' },
+  { id: 'BOT-26', entry: 'bots/bot-26-currency-bot/bot26.mjs'     },
+  { id: 'BOT-27', entry: 'bots/bot-27-geo-pricing/bot27.mjs'      },
+  { id: 'BOT-24', entry: 'bots/bot-24-auto-categorizer/bot24.mjs' },
+  { id: 'BOT-25', entry: 'bots/bot-25-auto-translator/bot25.mjs'  },
+  { id: 'BOT-29', entry: 'bots/bot-29-affiliate-sorter/bot29.mjs' },
   // שכבה 1 — איסוף
-  { id: 'BOT-07', entry: 'bot-07-ebay-epn/bot07.mjs'         },
-  { id: 'BOT-09', entry: 'bot-09-scraping-tier1/bot09.mjs'   },
-  { id: 'BOT-10', entry: 'bot-10-scraping-tier2/bot10.mjs'   },
+  { id: 'BOT-07', entry: 'bots/bot-07-ebay-epn/bot07.mjs'         },
+  { id: 'BOT-09', entry: 'bots/bot-09-scraping-tier1/bot09.mjs'   },
+  { id: 'BOT-10', entry: 'bots/bot-10-scraping-tier2/bot10.mjs'   },
 ];
 
 try {
