@@ -1,5 +1,8 @@
 // ════════════════════════════════════════════════════════════
-// sallysale-bots/index.js — Bot Coordinator (standalone)
+// sallysale-bots/index.js — Bot Coordinator (in-process)
+//
+// מריץ את כל הבוטים ישירות כ-ES modules באותו process.
+// כך כל בוט יורש את process.env אוטומטית — ללא child processes.
 //
 // סדר הרצה:
 //   שכבה 2 (אימות):  BOT-17, 18, 19, 20, 22, 23
@@ -11,9 +14,8 @@
 // ════════════════════════════════════════════════════════════
 
 import 'dotenv/config';
-import { spawn } from 'child_process';
 import { existsSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -48,33 +50,8 @@ if (toRun.length === 0) {
   process.exit(1);
 }
 
-console.log(`\n🚀 SallySale Bots — מריץ ${toRun.length} בוטים`);
+console.log(`\n🚀 SallySale Bots — מריץ ${toRun.length} בוטים (in-process)`);
 console.log('═'.repeat(50));
-
-const env = {
-  ...process.env,
-  SUPABASE_URL:        process.env.SUPABASE_URL,
-  SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
-  SCRAPERAPI_KEY:      process.env.SCRAPERAPI_KEY,
-  OPENAI_API_KEY:      process.env.OPENAI_API_KEY,
-  DEEPL_API_KEY:       process.env.DEEPL_API_KEY,
-  DEEPL_PRO:           process.env.DEEPL_PRO,
-  EBAY_APP_ID:         process.env.EBAY_APP_ID,
-  EBAY_CAMPAIGN_ID:    process.env.EBAY_CAMPAIGN_ID,
-  TRADEDOUBLER_TOKEN:  process.env.TRADEDOUBLER_TOKEN,
-  CJ_WEBSITE_ID:       process.env.CJ_WEBSITE_ID,
-  AWIN_PUBLISHER_ID:   process.env.AWIN_PUBLISHER_ID,
-  EXCHANGE_RATE_KEY:   process.env.EXCHANGE_RATE_KEY,
-};
-
-function runBot(entry) {
-  const fullPath = path.join(__dirname, entry);
-  return new Promise((resolve, reject) => {
-    const child = spawn('node', [fullPath], { stdio: 'inherit', env });
-    child.on('close', code => code === 0 ? resolve() : reject(new Error(`exit ${code}`)));
-    child.on('error', reject);
-  });
-}
 
 let passed = 0;
 let failed = 0;
@@ -91,13 +68,19 @@ for (const bot of toRun) {
   console.log(`\n▶  ${bot.id}...`);
   const start = Date.now();
 
+  // הגדר process.argv[1] כך שבדיקת isMain בתוך הבוט תעבור
+  const originalArgv1 = process.argv[1];
+  process.argv[1] = fullPath;
+
   try {
-    await runBot(bot.entry);
+    await import(pathToFileURL(fullPath).href);
     console.log(`✅  ${bot.id} — ${((Date.now() - start) / 1000).toFixed(1)}s`);
     passed++;
   } catch (err) {
     console.error(`❌  ${bot.id} — ${err.message}`);
     failed++;
+  } finally {
+    process.argv[1] = originalArgv1;
   }
 }
 
