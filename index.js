@@ -13,7 +13,6 @@
 //        node index.js BOT-07 BOT-24 (בוטים ספציפיים)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import { existsSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
