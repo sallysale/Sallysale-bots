@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node bot41.mjs"
+restartPolicyType = "on_failure"

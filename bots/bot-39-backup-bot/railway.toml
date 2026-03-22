@@ -2,6 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "node bot17.mjs"
-cronSchedule = "0 * * * *"
+startCommand = "node bot39.mjs"
+cronSchedule = "0 1 * * 0"
 restartPolicyType = "never"

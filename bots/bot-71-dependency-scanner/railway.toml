@@ -1,12 +1,7 @@
-# railway.toml — BOT-71 Dependency Scanner
 [build]
 builder = "nixpacks"
 
 [deploy]
 startCommand = "node bot71.mjs"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
-
-# cron: פעם בשבוע — שני 08:00 UTC
-# מוגדר ב-Railway dashboard → Service → Settings → Cron
-# ערך: 0 8 * * 1
+cronSchedule = "0 0 * * *"
+restartPolicyType = "never"

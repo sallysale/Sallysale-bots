@@ -1,12 +1,7 @@
-# railway.toml — BOT-Watchdog
 [build]
 builder = "nixpacks"
 
 [deploy]
 startCommand = "node botWatchdog.mjs"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
-
-# cron: כל 5 דקות
-# מוגדר ב-Railway dashboard → Service → Settings → Cron
-# ערך: */5 * * * *
+cronSchedule = "*/5 * * * *"
+restartPolicyType = "never"
