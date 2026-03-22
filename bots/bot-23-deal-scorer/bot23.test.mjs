@@ -2,7 +2,7 @@
 // הרץ: node bot23.test.mjs
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
+import supabase from './shared/supabaseClient.mjs';
 import { computeScore } from './bot23.mjs';
 
 const TESTS_PASSED = [];

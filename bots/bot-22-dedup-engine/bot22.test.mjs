@@ -2,7 +2,7 @@
 // הרץ: node bot22.test.mjs
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
+import supabase from './shared/supabaseClient.mjs';
 import { extractAsin, tokenize, jaccardSimilarity, dealSimilarity } from './bot22.mjs';
 
 const TESTS_PASSED = [];

@@ -16,8 +16,8 @@
 // ════════════════════════════════════════════════════════════
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
-import { createLogger } from '../shared/logger.mjs';
+import supabase from './shared/supabaseClient.mjs';
+import { createLogger } from './shared/logger.mjs';
 
 const BOT_ID = 'BOT-72';
 const log = createLogger(BOT_ID);

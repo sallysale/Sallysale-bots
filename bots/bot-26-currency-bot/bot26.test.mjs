@@ -2,7 +2,7 @@
 // הרץ: node bot26.test.mjs
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
+import supabase from './shared/supabaseClient.mjs';
 import { fetchRates, SUPPORTED_CURRENCIES } from './bot26.mjs';
 
 const TESTS_PASSED = [];

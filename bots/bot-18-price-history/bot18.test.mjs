@@ -3,7 +3,7 @@
 // הרץ: node bot18.test.mjs
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
+import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];
 const TESTS_FAILED = [];
