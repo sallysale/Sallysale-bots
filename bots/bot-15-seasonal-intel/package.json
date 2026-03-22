@@ -1,0 +1,9 @@
+{
+  "name": "sallysale-bot-15",
+  "version": "1.0.0",
+  "description": "BOT-15 — Seasonal calendar events deal booster",
+  "type": "module",
+  "main": "bot15.mjs",
+  "scripts": { "start": "node bot15.mjs", "test": "node bot15.test.mjs" },
+  "dependencies": { "@supabase/supabase-js": "^2.45.0", "dotenv": "^16.4.5" }
+}

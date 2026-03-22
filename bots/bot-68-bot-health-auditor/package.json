@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot68-bot-health-auditor",
+  "version": "1.0.0",
+  "description": "BOT-68 — audits all bots health from bots_log and sends daily Telegram report",
+  "type": "module",
+  "main": "bot68.mjs",
+  "scripts": {
+    "start": "node bot68.mjs",
+    "test": "node bot68.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

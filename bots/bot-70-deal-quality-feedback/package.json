@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot70-deal-quality-feedback",
+  "version": "1.0.0",
+  "description": "BOT-70 — processes user feedback on deals and updates scores using Wilson score",
+  "type": "module",
+  "main": "bot70.mjs",
+  "scripts": {
+    "start": "node bot70.mjs",
+    "test": "node bot70.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

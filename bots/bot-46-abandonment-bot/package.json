@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-46",
+  "version": "1.0.0",
+  "description": "BOT-46 — Abandonment Bot",
+  "type": "module",
+  "main": "bot46.mjs",
+  "scripts": {
+    "start": "node bot46.mjs",
+    "test": "node bot46.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

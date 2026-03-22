@@ -1,0 +1,12 @@
+{
+  "name": "sallysale-bot-36",
+  "version": "1.0.0",
+  "description": "BOT-36 — Daily Digest (Resend.com email, top 10 deals at 08:00)",
+  "type": "module",
+  "main": "bot36.mjs",
+  "scripts": { "start": "node bot36.mjs", "test": "node bot36.test.mjs" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot69-affiliate-link-tester",
+  "version": "1.0.0",
+  "description": "BOT-69 — tests affiliate links daily to detect broken/expired/blocked URLs",
+  "type": "module",
+  "main": "bot69.mjs",
+  "scripts": {
+    "start": "node bot69.mjs",
+    "test": "node bot69.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

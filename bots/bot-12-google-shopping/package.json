@@ -1,0 +1,9 @@
+{
+  "name": "sallysale-bot-12",
+  "version": "1.0.0",
+  "description": "BOT-12 — Google Shopping sale badges scraper via ScraperAPI",
+  "type": "module",
+  "main": "bot12.mjs",
+  "scripts": { "start": "node bot12.mjs", "test": "node bot12.test.mjs" },
+  "dependencies": { "@supabase/supabase-js": "^2.45.0", "dotenv": "^16.4.5" }
+}

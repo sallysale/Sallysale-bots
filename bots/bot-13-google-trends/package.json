@@ -1,0 +1,9 @@
+{
+  "name": "sallysale-bot-13",
+  "version": "1.0.0",
+  "description": "BOT-13 — Google Trends shopping signal detector",
+  "type": "module",
+  "main": "bot13.mjs",
+  "scripts": { "start": "node bot13.mjs", "test": "node bot13.test.mjs" },
+  "dependencies": { "@supabase/supabase-js": "^2.45.0", "dotenv": "^16.4.5" }
+}

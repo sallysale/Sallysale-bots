@@ -18,8 +18,8 @@
 // ════════════════════════════════════════════════════════════
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
-import { createLogger } from '../shared/logger.mjs';
+import supabase from './shared/supabaseClient.mjs';
+import { createLogger } from './shared/logger.mjs';
 
 const BOT_ID       = 'BOT-24';
 const BATCH_SIZE   = 50;

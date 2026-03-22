@@ -1,0 +1,12 @@
+{
+  "name": "sallysale-bot-34",
+  "version": "1.0.0",
+  "description": "BOT-34 — SEO Bot (meta tags + slugs + sitemap.xml)",
+  "type": "module",
+  "main": "bot34.mjs",
+  "scripts": { "start": "node bot34.mjs", "test": "node bot34.test.mjs" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-failover",
+  "version": "1.0.0",
+  "description": "BOT-Failover — Automatic API Failover (primary → ScraperAPI → backup)",
+  "type": "module",
+  "main": "botFailover.mjs",
+  "scripts": {
+    "start": "node botFailover.mjs",
+    "test":  "node botFailover.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

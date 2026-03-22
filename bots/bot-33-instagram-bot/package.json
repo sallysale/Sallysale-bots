@@ -1,0 +1,12 @@
+{
+  "name": "sallysale-bot-33",
+  "version": "1.0.0",
+  "description": "BOT-33 — Instagram Bot (auto-generate posts → instagram_queue)",
+  "type": "module",
+  "main": "bot33.mjs",
+  "scripts": { "start": "node bot33.mjs", "test": "node bot33.test.mjs" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -2,7 +2,7 @@
 // הרץ: node bot27.test.mjs
 
 import 'dotenv/config';
-import supabase from '../shared/supabaseClient.mjs';
+import supabase from './shared/supabaseClient.mjs';
 import { convertPrice, loadRates } from './bot27.mjs';
 
 const TESTS_PASSED = [];

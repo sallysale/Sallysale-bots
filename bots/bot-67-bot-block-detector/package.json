@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot67-bot-block-detector",
+  "version": "1.0.0",
+  "description": "BOT-67 — monitors if scrapers are being blocked by target sites",
+  "type": "module",
+  "main": "bot67.mjs",
+  "scripts": {
+    "start": "node bot67.mjs",
+    "test": "node bot67.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

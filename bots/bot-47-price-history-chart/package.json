@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-47",
+  "version": "1.0.0",
+  "description": "BOT-47 — Price History Chart",
+  "type": "module",
+  "main": "bot47.mjs",
+  "scripts": {
+    "start": "node bot47.mjs",
+    "test": "node bot47.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

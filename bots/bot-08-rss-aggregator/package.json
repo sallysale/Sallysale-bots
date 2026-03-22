@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-08",
+  "version": "1.0.0",
+  "description": "BOT-08 — RSS Aggregator (Amazon, BestBuy, SlickDeals)",
+  "type": "module",
+  "main": "bot08.mjs",
+  "scripts": {
+    "start": "node bot08.mjs",
+    "test":  "node bot08.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

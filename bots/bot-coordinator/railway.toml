@@ -1,0 +1,12 @@
+# railway.toml — BOT-Coordinator
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node botCoordinator.mjs"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+# cron: כל 15 דקות — דוח תור + ניקוי
+# מוגדר ב-Railway dashboard → Service → Settings → Cron
+# ערך: */15 * * * *

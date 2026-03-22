@@ -12,8 +12,8 @@
 
 import 'dotenv/config';
 import { parse } from 'node-html-parser';
-import supabase from '../shared/supabaseClient.mjs';
-import { createLogger } from '../shared/logger.mjs';
+import supabase from './shared/supabaseClient.mjs';
+import { createLogger } from './shared/logger.mjs';
 
 const BOT_ID           = 'BOT-09';
 const DELAY_MS         = 2000;   // 2 שניות בין בקשות — לא לעמיס את ScraperAPI

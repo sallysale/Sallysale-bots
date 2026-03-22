@@ -1,0 +1,13 @@
+{
+  "name": "sallysale-bot-35",
+  "version": "1.0.0",
+  "description": "BOT-35 — Push Notifications (web-push VAPID)",
+  "type": "module",
+  "main": "bot35.mjs",
+  "scripts": { "start": "node bot35.mjs", "test": "node bot35.test.mjs" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5",
+    "web-push": "^3.6.7"
+  }
+}

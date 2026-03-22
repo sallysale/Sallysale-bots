@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-71",
+  "version": "1.0.0",
+  "description": "BOT-71 — Dependency Scanner",
+  "type": "module",
+  "main": "bot71.mjs",
+  "scripts": {
+    "start": "node bot71.mjs",
+    "test":  "node bot71.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}
