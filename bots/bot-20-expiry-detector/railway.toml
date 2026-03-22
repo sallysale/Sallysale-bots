@@ -1,12 +1,8 @@
-# railway.toml — BOT-20 Expiry Detector
 [build]
 builder = "nixpacks"
 
 [deploy]
 startCommand = "node bot20.mjs"
+cronSchedule = "0 */2 * * *"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
-
-# cron: כל 6 שעות
-# מוגדר ב-Railway dashboard → Service → Settings → Cron
-# ערך: 0 */6 * * *

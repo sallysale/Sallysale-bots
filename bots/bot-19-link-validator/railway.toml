@@ -1,12 +1,8 @@
-# railway.toml — BOT-19 Link Validator
 [build]
 builder = "nixpacks"
 
 [deploy]
 startCommand = "node bot19.mjs"
+cronSchedule = "0 */6 * * *"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
-
-# cron: כל 6 שעות
-# מוגדר ב-Railway dashboard → Service → Settings → Cron
-# ערך: 0 */6 * * *
