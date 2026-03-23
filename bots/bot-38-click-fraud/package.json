@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-38-click-fraud",
+  "version": "1.0.0",
+  "description": "BOT-38 — Click Fraud Detector",
+  "type": "module",
+  "main": "bot38.mjs",
+  "scripts": {
+    "start": "node bot38.mjs",
+    "test":  "node bot38.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

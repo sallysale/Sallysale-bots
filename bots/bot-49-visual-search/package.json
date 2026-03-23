@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-49-visual-search",
+  "version": "1.0.0",
+  "description": "BOT-49 — Visual Search",
+  "type": "module",
+  "main": "bot49.mjs",
+  "scripts": {
+    "start": "node bot49.mjs",
+    "test":  "node bot49.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

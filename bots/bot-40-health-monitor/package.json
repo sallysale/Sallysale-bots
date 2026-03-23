@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-40-health-monitor",
+  "version": "1.0.0",
+  "description": "BOT-40 — Health Monitor",
+  "type": "module",
+  "main": "bot40.mjs",
+  "scripts": {
+    "start": "node bot40.mjs",
+    "test":  "node bot40.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

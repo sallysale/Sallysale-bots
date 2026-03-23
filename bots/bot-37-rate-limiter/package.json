@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-37-rate-limiter",
+  "version": "1.0.0",
+  "description": "BOT-37 — Rate Limiter",
+  "type": "module",
+  "main": "bot37.mjs",
+  "scripts": {
+    "start": "node bot37.mjs",
+    "test":  "node bot37.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

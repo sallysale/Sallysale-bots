@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-52-coverage-tracker",
+  "version": "1.0.0",
+  "description": "BOT-52 — Coverage Tracker",
+  "type": "module",
+  "main": "bot52.mjs",
+  "scripts": {
+    "start": "node bot52.mjs",
+    "test":  "node bot52.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}

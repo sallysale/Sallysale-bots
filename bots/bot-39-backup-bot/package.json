@@ -1,0 +1,15 @@
+{
+  "name": "sallysale-bot-39-backup-bot",
+  "version": "1.0.0",
+  "description": "BOT-39 — Backup Bot",
+  "type": "module",
+  "main": "bot39.mjs",
+  "scripts": {
+    "start": "node bot39.mjs",
+    "test":  "node bot39.test.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.5"
+  }
+}
