@@ -17,7 +17,6 @@
 //   FROM_NAME       — SallySale
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

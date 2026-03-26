@@ -1,7 +1,6 @@
 // bot71.test.mjs — בדיקות ל-BOT-71 Dependency Scanner
 // הרץ: node bot71.test.mjs
 
-import 'dotenv/config';
 import fs   from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

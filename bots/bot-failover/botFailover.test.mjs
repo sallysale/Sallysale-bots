@@ -1,7 +1,6 @@
 // botFailover.test.mjs — בדיקות ל-BOT-Failover
 // הרץ: node botFailover.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

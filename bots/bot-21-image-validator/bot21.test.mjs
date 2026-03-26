@@ -1,7 +1,6 @@
 // bot21.test.mjs — בדיקות ל-BOT-21 Image Validator
 // הרץ: node bot21.test.mjs
 
-import 'dotenv/config';
 import https from 'https';
 import http from 'http';
 import supabase from './shared/supabaseClient.mjs';

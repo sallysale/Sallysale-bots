@@ -1,7 +1,6 @@
 // bot20.test.mjs — בדיקות בסיסיות ל-BOT-20 לפני deploy
 // הרץ: node bot20.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

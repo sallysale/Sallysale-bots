@@ -18,7 +18,6 @@
 //   SITE_URL        — https://sallysale.com
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

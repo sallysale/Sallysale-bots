@@ -20,7 +20,6 @@
 //   SUPABASE_URL           — כבר ב-.env
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

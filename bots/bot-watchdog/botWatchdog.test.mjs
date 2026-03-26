@@ -1,7 +1,6 @@
 // botWatchdog.test.mjs — בדיקות ל-BOT-Watchdog
 // הרץ: node botWatchdog.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

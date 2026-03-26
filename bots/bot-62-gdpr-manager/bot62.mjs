@@ -17,7 +17,6 @@
 //   SUPABASE_URL, SUPABASE_SERVICE_KEY
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

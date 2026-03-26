@@ -1,7 +1,6 @@
 // bot30.test.mjs — בדיקות ל-BOT-30 Anti-Abuse
 // הרץ: node bot30.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

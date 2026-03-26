@@ -10,7 +10,6 @@
 // תדירות: כל 12 שעות (Railway cron: 0 */12 * * *)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import { parse } from 'node-html-parser';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';

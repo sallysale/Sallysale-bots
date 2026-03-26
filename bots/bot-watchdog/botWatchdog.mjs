@@ -8,7 +8,6 @@
 // תדירות: כל 5 דקות (Railway cron: */5 * * * *)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import https   from 'https';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';

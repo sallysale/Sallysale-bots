@@ -8,7 +8,6 @@
 // מוציא: price_history rows + is_real_sale עדכני על deals
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

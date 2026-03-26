@@ -16,7 +16,6 @@
 // Env vars: SUPABASE_URL, SUPABASE_SERVICE_KEY (מ-shared)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

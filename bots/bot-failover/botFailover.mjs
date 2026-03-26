@@ -11,7 +11,6 @@
 // שימוש כ-module: import { fetchWithFailover } from './botFailover.mjs'
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import https   from 'https';
 import http    from 'http';
 import supabase from './shared/supabaseClient.mjs';

@@ -9,7 +9,6 @@
 // מקסימום: 200 פריטים להרצה (2 עמודים × 100)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

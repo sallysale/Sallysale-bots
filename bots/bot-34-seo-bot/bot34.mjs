@@ -12,7 +12,6 @@
 // תדירות: פעם ביום 02:00 UTC (Railway cron: 0 2 * * *)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

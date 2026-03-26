@@ -1,7 +1,6 @@
 // bot27.test.mjs — בדיקות ל-BOT-27 Geo-Pricing
 // הרץ: node bot27.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { convertPrice, loadRates } from './bot27.mjs';
 

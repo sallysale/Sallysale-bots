@@ -7,7 +7,6 @@
 // תדירות: פעם ביום 04:00 UTC (Railway cron: 0 4 * * *)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import https from 'https';
 import http from 'http';
 import supabase from './shared/supabaseClient.mjs';

@@ -9,7 +9,6 @@
 // Env vars: SUPABASE_URL, SUPABASE_SERVICE_KEY (מ-shared)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import { writeFileSync, mkdirSync, existsSync, unlinkSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

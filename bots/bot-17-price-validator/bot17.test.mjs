@@ -1,7 +1,6 @@
 // bot17.test.mjs — בדיקות בסיסיות ל-BOT-17 לפני deploy
 // הרץ: node bot17.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

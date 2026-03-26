@@ -8,7 +8,6 @@
 // שימוש: import { enqueue, processQueue } from './botCoordinator.mjs'
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

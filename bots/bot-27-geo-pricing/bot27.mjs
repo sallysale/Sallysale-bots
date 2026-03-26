@@ -10,7 +10,6 @@
 //         (תלוי ב-BOT-26 שמרוץ כל שעה ומעדכן שערים)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

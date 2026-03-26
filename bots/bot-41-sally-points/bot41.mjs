@@ -20,7 +20,6 @@
 // טבלאות: user_points, points_transactions, user_tiers
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

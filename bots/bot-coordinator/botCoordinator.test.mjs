@@ -1,7 +1,6 @@
 // botCoordinator.test.mjs — בדיקות ל-BOT-Coordinator
 // הרץ: node botCoordinator.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

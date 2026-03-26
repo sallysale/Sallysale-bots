@@ -2,7 +2,6 @@
 // בדיקות בסיסיות ל-BOT-18 לפני deploy
 // הרץ: node bot18.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 
 const TESTS_PASSED = [];

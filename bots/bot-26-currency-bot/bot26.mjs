@@ -10,7 +10,6 @@
 // API: https://v6.exchangerate-api.com/v6/{KEY}/latest/USD (חינם — 1500 req/חודש)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 

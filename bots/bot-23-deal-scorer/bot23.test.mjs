@@ -1,7 +1,6 @@
 // bot23.test.mjs — בדיקות ל-BOT-23 Deal Scorer
 // הרץ: node bot23.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { computeScore } from './bot23.mjs';
 

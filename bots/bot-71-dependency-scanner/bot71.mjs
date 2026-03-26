@@ -7,7 +7,6 @@
 // תדירות: פעם בשבוע (Railway cron: 0 8 * * 1)
 // ════════════════════════════════════════════════════════════
 
-import 'dotenv/config';
 import { execSync }  from 'child_process';
 import path          from 'path';
 import { fileURLToPath } from 'url';

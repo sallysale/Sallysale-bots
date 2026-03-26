@@ -2,7 +2,6 @@
 // לקוח Supabase משותף לכל הבוטים — משתמש ב-SERVICE_ROLE key
 
 import { createClient } from '@supabase/supabase-js';
-import 'dotenv/config';
 
 const SUPABASE_URL  = process.env.SUPABASE_URL;
 const SERVICE_KEY   = process.env.SUPABASE_SERVICE_KEY; // לעולם לא ב-frontend!

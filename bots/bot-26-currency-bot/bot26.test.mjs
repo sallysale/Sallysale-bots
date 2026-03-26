@@ -1,7 +1,6 @@
 // bot26.test.mjs — בדיקות ל-BOT-26 Currency Bot
 // הרץ: node bot26.test.mjs
 
-import 'dotenv/config';
 import supabase from './shared/supabaseClient.mjs';
 import { fetchRates, SUPPORTED_CURRENCIES } from './bot26.mjs';
 
