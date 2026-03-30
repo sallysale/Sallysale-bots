@@ -327,6 +327,65 @@ function parseNAP(html, storeBaseUrl) {
   return products;
 }
 
+// ── Generic parser ────────────────────────────────────────────
+/**
+ * parseGeneric — parser כללי לחנויות ללא parser ייעודי.
+ * מחלץ מוצרים לפי סלקטורים נפוצים.
+ */
+export function parseGeneric(html, storeBaseUrl) {
+  const root = parse(html);
+  const products = [];
+
+  // ניסיון 1: article/li/div עם data-price
+  const candidates = root.querySelectorAll('[data-price],[data-sale-price],[data-original-price]');
+  for (const el of candidates.slice(0, MAX_PER_STORE)) {
+    const price        = parseFloat(el.getAttribute('data-price') || el.getAttribute('data-sale-price') || '0') || null;
+    const origPrice    = parseFloat(el.getAttribute('data-original-price') || '0') || null;
+    const titleEl      = el.querySelector('h2,h3,h4,[data-title],.product-title,.name');
+    const title        = titleEl?.text?.trim() || el.getAttribute('data-title') || '';
+    const linkEl       = el.querySelector('a[href]');
+    const href         = linkEl?.getAttribute('href') || '';
+    const imgEl        = el.querySelector('img[src],img[data-src]');
+    const imgSrc       = imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || '';
+    if (!title || !href) continue;
+    const productUrl   = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
+    const imageUrl     = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
+    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
+  }
+
+  // ניסיון 2 (fallback): כל link עם מחיר בתוכו
+  if (products.length === 0) {
+    const links = root.querySelectorAll('a[href]');
+    for (const a of links.slice(0, MAX_PER_STORE * 3)) {
+      const text   = a.text?.trim() || '';
+      const href   = a.getAttribute('href') || '';
+      const priceM = text.match(/[\d,.]+/);
+      if (!priceM || !href || text.length < 4 || text.length > 200) continue;
+      const price  = parseFloat(priceM[0].replace(',', '.')) || null;
+      const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
+      products.push({ title: text.slice(0, 120), price, originalPrice: null, productUrl, imageUrl: '', description: '' });
+      if (products.length >= MAX_PER_STORE) break;
+    }
+  }
+
+  return products;
+}
+
+// ── עזר: בנה STORE_CONFIG מ-simple object ─────────────────────
+function makeStore(name, url, country, category) {
+  const currencyMap = { IL: 'ILS', GB: 'GBP', US: 'USD', DE: 'EUR', FR: 'EUR', AU: 'AUD' };
+  const origin      = new URL(url).origin;
+  return {
+    name,
+    category,
+    currency: currencyMap[country] || 'USD',
+    country,
+    baseUrl:  origin,
+    urls:     [url],
+    parser:   parseGeneric,
+  };
+}
+
 // ════════════════════════════════════════════════════════════
 // קונפיגורציית חנויות
 // ════════════════════════════════════════════════════════════
@@ -389,6 +448,69 @@ const STORE_CONFIGS = [
     ],
     parser: parseNAP,
   },
+
+  // ישראל — אלקטרוניקה
+  makeStore('KSP',        'https://ksp.co.il/web/cat/sale',              'IL', 'electronics'),
+  makeStore('Ivory',      'https://www.ivory.co.il/catalog.php?id=2',    'IL', 'electronics'),
+  makeStore('Bug',        'https://www.bug.co.il/specials',              'IL', 'electronics'),
+  makeStore('iDigital',   'https://www.idigital.co.il/sale',             'IL', 'electronics'),
+  makeStore('Mega',       'https://www.mega.co.il/promotions',           'IL', 'electronics'),
+  makeStore('Hamashbir',  'https://www.hamashbir.com/sale',              'IL', 'home'),
+
+  // ישראל — אופנה
+  makeStore('Castro',         'https://www.castro.com/sale',                          'IL', 'fashion'),
+  makeStore('Renuar',         'https://www.renuar.co.il/sale',                        'IL', 'fashion'),
+  makeStore('Fox',            'https://www.foxfashion.co.il/sale',                   'IL', 'fashion'),
+  makeStore('Terminalx',      'https://www.terminalx.com/sale',                      'IL', 'fashion'),
+  makeStore('Adidas IL',      'https://www.adidas.co.il/sale',                       'IL', 'fashion'),
+  makeStore('Nike IL',        'https://www.nike.com/il/w/sale',                      'IL', 'fashion'),
+  makeStore('Golf',           'https://www.golf.co.il/sale',                         'IL', 'fashion'),
+  makeStore('Gindi',          'https://gindi.com/sale',                              'IL', 'fashion'),
+  makeStore('Honigman',       'https://www.honigman.co.il/sale',                     'IL', 'fashion'),
+  makeStore('Promod',         'https://www.promod.co.il/sale',                       'IL', 'fashion'),
+  makeStore('Bershka IL',     'https://www.bershka.com/il/sale',                     'IL', 'fashion'),
+  makeStore('Pull&Bear IL',   'https://www.pullandbear.com/il/sale',                 'IL', 'fashion'),
+  makeStore('Stradivarius IL','https://www.stradivarius.com/il/sale',                'IL', 'fashion'),
+  makeStore('H&M IL',         'https://www2.hm.com/he_il/sale.html',                 'IL', 'fashion'),
+
+  // ישראל — בית
+  makeStore('IKEA IL',      'https://www.ikea.com/il/he/offers/',               'IL', 'home'),
+  makeStore('Home Center',  'https://www.homecenter.co.il/homecenter/sale',     'IL', 'home'),
+  makeStore('Ace IL',       'https://www.ace.co.il/promotions',                 'IL', 'home'),
+  makeStore('Keter',        'https://www.keter.com/il/sale',                    'IL', 'home'),
+  makeStore('Tambour',      'https://www.tambour.co.il/promotions',             'IL', 'home'),
+
+  // ישראל — ספורט
+  makeStore('Decathlon IL',  'https://www.decathlon.co.il/sale',    'IL', 'sports'),
+  makeStore('Sport Depot',   'https://www.sportdepot.co.il/sale',   'IL', 'sports'),
+  makeStore('Intersport IL', 'https://www.intersport.co.il/sale',   'IL', 'sports'),
+
+  // ישראל — יופי
+  makeStore('Superpharm', 'https://www.super-pharm.co.il/sale', 'IL', 'beauty'),
+  makeStore('Newpharm',   'https://www.newpharm.co.il/sale',    'IL', 'beauty'),
+  makeStore('Kravitz',    'https://kravitz.co.il/sale',         'IL', 'beauty'),
+
+  // ישראל — ילדים
+  makeStore('Toys R Us IL', 'https://www.toysrus.co.il/sale',             'IL', 'kids'),
+  makeStore('Shilav',       'https://www.shilav.co.il/sale',              'IL', 'kids'),
+  makeStore('Fox Kids',     'https://www.foxfashion.co.il/kids/sale',     'IL', 'kids'),
+
+  // בינלאומי נוסף
+  makeStore('ASOS',            'https://www.asos.com/sale/',                                     'GB', 'fashion'),
+  makeStore('Zalando',         'https://www.zalando.co.uk/sale/',                                'GB', 'fashion'),
+  makeStore('Uniqlo',          'https://www.uniqlo.com/uk/en/special-offers/sale/',              'GB', 'fashion'),
+  makeStore('Gap',             'https://www.gap.com/browse/category.do?cid=1159565',             'US', 'fashion'),
+  makeStore('Old Navy',        'https://www.oldnavy.com/shop/sale',                              'US', 'fashion'),
+  makeStore('Forever 21',      'https://www.forever21.com/us/2000447537.html',                   'US', 'fashion'),
+  makeStore('Urban Outfitters','https://www.urbanoutfitters.com/sale',                           'US', 'fashion'),
+  makeStore('Nordstrom Rack',  'https://www.nordstromrack.com',                                  'US', 'fashion'),
+  makeStore('Target',          'https://www.target.com/c/clearance/-/N-5q0ga',                   'US', 'home'),
+  makeStore('Walmart',         'https://www.walmart.com/cp/rollbacks/1078524',                   'US', 'home'),
+  makeStore('Currys',          'https://www.currys.co.uk/gbuk/deals.html',                       'GB', 'electronics'),
+  makeStore('John Lewis',      'https://www.johnlewis.com/our-brands/sale',                      'GB', 'home'),
+  makeStore('Next',            'https://www.next.co.uk/shop/gender-women-saleseason-sale',       'GB', 'fashion'),
+  makeStore('Marks & Spencer', 'https://www.marksandspencer.com/l/womens/sale',                  'GB', 'fashion'),
+  makeStore('Primark',         'https://www.primark.com/en-gb/a/fashion/sale',                   'GB', 'fashion'),
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -485,6 +607,12 @@ export async function scrapeStore(storeConfig, logger) {
  */
 async function upsertDeals(payloads, logger) {
   if (payloads.length === 0) return { added: 0, updated: 0 };
+
+  // תיקון price overflow — אם מחיר נראה כסנטים (מעל 99,999) חלק ב-100
+  for (const payload of payloads) {
+    if (payload.price > 99999) payload.price = Math.round(payload.price / 100);
+    if (payload.original_price && payload.original_price > 99999) payload.original_price = Math.round(payload.original_price / 100);
+  }
 
   const { data, error } = await supabase
     .from('deals')
