@@ -11,8 +11,8 @@
 //   RAILWAY_API_TOKEN     — ee56f3e5-3ebc-4eee-83a5-38074eac157b
 // ════════════════════════════════════════════════════════════
 
-import supabase from '../shared/supabaseClient.mjs';
-import { createLogger } from '../shared/logger.mjs';
+import supabase from './shared/supabaseClient.mjs';
+import { createLogger } from './shared/logger.mjs';
 
 const BOT_ID = 'BOT-WATCHDOG';
 const log = createLogger(BOT_ID);
