@@ -1,12 +1,11 @@
 {
   "name": "sallysale-bot-watchdog",
   "version": "1.0.0",
-  "description": "BOT-Watchdog — Crash Recovery & Health Monitor",
+  "description": "BOT-WATCHDOG — Trigger Processor",
   "type": "module",
-  "main": "botWatchdog.mjs",
+  "main": "bot-watchdog.mjs",
   "scripts": {
-    "start": "node botWatchdog.mjs",
-    "test":  "node botWatchdog.test.mjs"
+    "start": "node bot-watchdog.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

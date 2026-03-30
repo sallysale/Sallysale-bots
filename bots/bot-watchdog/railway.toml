@@ -1,7 +1,7 @@
 [build]
-builder = "nixpacks"
+builder = "NIXPACKS"
 
 [deploy]
-startCommand = "node botWatchdog.mjs"
-cronSchedule = "*/5 * * * *"
-restartPolicyType = "never"
+startCommand = "node bot-watchdog.mjs"
+cronSchedule = "* * * * *"
+restartPolicyType = "ON_FAILURE"
