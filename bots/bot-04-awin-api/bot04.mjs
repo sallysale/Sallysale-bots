@@ -215,6 +215,7 @@ async function logFinish(logId, stats, status = 'done') {
 export async function fetchAwinPromotions(type, page) {
   const params = new URLSearchParams({
     type,
+    promotionType: 'deal',
     page:     String(page),
     pageSize: String(PROMO_PER_PAGE),
     status:   'active',
