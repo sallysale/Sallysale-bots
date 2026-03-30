@@ -141,9 +141,11 @@ async function pingSupabase() {
 async function pingSite() {
   const start = Date.now();
   try {
+    const bypassSecret = process.env.VERCEL_BYPASS_SECRET || '';
     const res = await fetch(SITE_URL, {
       method: 'HEAD',
       signal: AbortSignal.timeout(PING_TIMEOUT_MS),
+      headers: bypassSecret ? { 'x-vercel-protection-bypass': bypassSecret } : {},
     });
     const ms = Date.now() - start;
     return { ok: res.ok || res.status < 500, ms, error: null, statusCode: res.status };
