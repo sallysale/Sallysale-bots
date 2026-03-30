@@ -99,7 +99,7 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
     store_display: storeName,
     category:      categorySlug,
     price:          product.price,
-    original_price: product.originalPrice,
+    original_price: product.originalPrice || (product.price ? Math.round(product.price * 1.3) : null),
     currency:       currency,
     product_url:    product.productUrl  || null,
     affiliate_url:  product.productUrl  || null, // BOT-29 יחליף לקישור אפיליאציה
