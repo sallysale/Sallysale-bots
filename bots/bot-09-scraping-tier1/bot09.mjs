@@ -18,7 +18,7 @@ import { createLogger } from './shared/logger.mjs';
 const BOT_ID           = 'BOT-09';
 const DELAY_MS         = 2000;   // 2 שניות בין בקשות — לא לעמיס את ScraperAPI
 const MAX_PER_STORE    = 50;     // מקסימום מוצרים לחנות בהרצה אחת
-const MIN_DISCOUNT_PCT = 10;     // הנחה מינימלית לקבלת דיל
+const MIN_DISCOUNT_PCT = 5;      // הנחה מינימלית לקבלת דיל
 
 // ── sleep ─────────────────────────────────────────────────────
 /** עיכוב אסינכרוני פשוט (ms) */
@@ -74,10 +74,11 @@ export function extractDiscount(price, originalPrice) {
  * @returns {boolean}
  */
 export function isValidDeal(price, originalPrice) {
-  if (price == null || originalPrice == null) return false;
+  if (price == null) return false;
   if (price <= 0) return false;
+  if (originalPrice == null) return true; // originalPrice optional — קבל אם אין מחיר מקורי
   const discount = extractDiscount(price, originalPrice);
-  if (discount == null) return false;
+  if (discount == null) return true; // לא ניתן לחשב הנחה — קבל
   return discount >= MIN_DISCOUNT_PCT;
 }
 
