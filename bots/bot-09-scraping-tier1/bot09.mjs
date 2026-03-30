@@ -574,6 +574,10 @@ export async function scrapeStore(storeConfig, logger) {
     }
 
     logger.log(`[${name}] נמצאו ${rawProducts.length} מוצרים גולמיים ב-${url}`);
+    logger.log(`[DEBUG] מוצרים גולמיים לפני סינון: ${rawProducts.length}`)
+    if (rawProducts.length > 0) {
+      logger.log(`[DEBUG] דוגמה: ${JSON.stringify(rawProducts[0])}`)
+    }
 
     for (const prod of rawProducts) {
       if (!isValidDeal(prod.price, prod.originalPrice)) continue;
