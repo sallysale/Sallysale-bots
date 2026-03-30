@@ -96,8 +96,8 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
   return {
     title_en:      product.title      || null,
     title_he:      null,               // יתורגם ע"י BOT-25
-    storeName_en:  storeName,
-    category_slug: categorySlug,
+    store_display: storeName,
+    category:      categorySlug,
     price:          product.price,
     original_price: product.originalPrice,
     currency:       currency,
