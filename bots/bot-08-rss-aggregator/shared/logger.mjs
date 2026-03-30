@@ -11,5 +11,5 @@ export function createLogger(botId) {
   const err  = (msg)  => { console.error(`[${botId}] ${new Date().toISOString()} ❌ ${msg}`); errors.push(msg); };
   const elapsed = ()  => `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
 
-  return { log, ok, warn, err, errors, elapsed };
+  return { log, ok, warn, err, errors, elapsed, info: (...args) => log(...args), warn: (...args) => warn(...args), error: (...args) => err(...args) };
 }
