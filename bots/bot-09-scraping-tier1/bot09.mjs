@@ -98,16 +98,16 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
     title_he:      null,               // יתורגם ע"י BOT-25
     storeName_en:  storeName,
     category_slug: categorySlug,
-    price:         product.price,
-    originalPrice: product.originalPrice,
-    currency:      currency,
-    productUrl:    product.productUrl  || null,
-    affiliateUrl:  product.productUrl  || null, // BOT-29 יחליף לקישור אפיליאציה
-    imageUrl:      product.imageUrl    || null,
+    price:          product.price,
+    original_price: product.originalPrice,
+    currency:       currency,
+    product_url:    product.productUrl  || null,
+    affiliate_url:  product.productUrl  || null, // BOT-29 יחליף לקישור אפיליאציה
+    image_url:      product.imageUrl    || null,
     description_en: product.description || null,
-    shippingCost:  0,
-    country:       country,
-    inStock:       true,
+    shipping_cost:  0,
+    country:        country,
+    in_stock:       true,
     status:        'pending',           // עובר דרך pipeline BOT-17/22/23
     source:        'scraper_t1',
     tags:          [storeName.toLowerCase(), categorySlug, 'sale'],
@@ -488,7 +488,7 @@ async function upsertDeals(payloads, logger) {
 
   const { data, error } = await supabase
     .from('deals')
-    .upsert(payloads, { onConflict: 'productUrl', ignoreDuplicates: false })
+    .upsert(payloads, { onConflict: 'product_url', ignoreDuplicates: false })
     .select('id');
 
   if (error) {
