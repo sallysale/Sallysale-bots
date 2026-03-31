@@ -11,6 +11,23 @@
 // ════════════════════════════════════════════════════════════
 
 import pkg from 'node-html-parser';
+import puppeteer from 'puppeteer';
+
+async function fetchWithPuppeteer(url) {
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: 'new',
+  })
+  try {
+    const page = await browser.newPage()
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 })
+    return await page.content()
+  } finally {
+    await browser.close()
+  }
+}
+
 const { parse } = pkg;
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
@@ -475,14 +492,23 @@ export async function scrapeStore(storeConfig, logger) {
   for (const url of urls) {
     logger.log(`[${name}] מביא: ${url}`);
     let html;
-    try {
-      html = await fetchViaScraperAPI(url);
-    } catch {
-      logger.log(`[${name}] ScraperAPI נכשל — מנסה fetchDirect (${url})`);
-      html = await fetchDirect(url);
+    if (country === 'IL') {
+      try {
+        html = await fetchWithPuppeteer(url);
+      } catch (e) {
+        logger.log(`[${name}] Puppeteer נכשל — מנסה fetchDirect (${url}): ${e.message}`);
+        html = await fetchDirect(url);
+      }
+    } else {
+      try {
+        html = await fetchViaScraperAPI(url);
+      } catch {
+        logger.log(`[${name}] ScraperAPI נכשל — מנסה fetchDirect (${url})`);
+        html = await fetchDirect(url);
+      }
     }
     if (!html) {
-      logger.log(`[${name}] גם fetchDirect נכשל — דולג (${url})`);
+      logger.log(`[${name}] גם fallback נכשל — דולג (${url})`);
       continue;
     }
 
