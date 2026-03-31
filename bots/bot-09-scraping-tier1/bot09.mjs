@@ -94,6 +94,8 @@ export function isValidDeal(price, originalPrice) {
  */
 export function buildDealPayload(product, storeName, categorySlug, currency, country) {
   return {
+    id:            `scraper_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+    slug:          (product.title || storeName).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60) + '-' + Date.now(),
     title_en:      product.title      || null,
     title_he:      null,               // יתורגם ע"י BOT-25
     store_display: storeName,
