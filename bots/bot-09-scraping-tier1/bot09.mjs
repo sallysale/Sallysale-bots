@@ -115,7 +115,6 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
   return {
     id:            `scraper_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
     slug:          (product.title || storeName).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60) + '-' + Date.now(),
-    store:         STORE_ID_MAP[storeName] || storeName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
     title_en:      product.title      || null,
     title_he:      null,               // יתורגם ע"י BOT-25
     store_display: storeName,
@@ -398,7 +397,8 @@ const STORE_CONFIGS = [
   makeStore('Tambour',      'https://www.tambour.co.il/promotions',             'IL', 'home'),
 
   // ישראל — ספורט
-  makeStore('Decathlon IL',  'https://www.decathlon.co.il/sale',    'IL', 'sports'),
+  makeStore('Decathlon IL',  'https://www.decathlon.co.il/sale',          'IL', 'sports'),
+  makeStore('IKEA IL Offers','https://www.ikea.com/il/he/special-offers/', 'IL', 'home'),
   makeStore('Sport Depot',   'https://www.sportdepot.co.il/sale',   'IL', 'sports'),
   makeStore('Intersport IL', 'https://www.intersport.co.il/sale',   'IL', 'sports'),
 
@@ -476,16 +476,14 @@ export async function scrapeStore(storeConfig, logger) {
     logger.log(`[${name}] מביא: ${url}`);
     let html;
     try {
+      html = await fetchViaScraperAPI(url);
+    } catch {
+      logger.log(`[${name}] ScraperAPI נכשל — מנסה fetchDirect (${url})`);
       html = await fetchDirect(url);
-      if (html) {
-        logger.log(`[${name}] fetchDirect הצליח (${url})`);
-      } else {
-        logger.log(`[${name}] fetchDirect נכשל — עובר ל-ScraperAPI (${url})`);
-        html = await fetchViaScraperAPI(url);
-      }
-    } catch (e) {
-      logger.err(`[${name}] fetch נכשל לחלוטין (${url}): ${e.message}`);
-      continue; // ממשיך ל-URL הבא — לא עוצר את כל החנות
+    }
+    if (!html) {
+      logger.log(`[${name}] גם fetchDirect נכשל — דולג (${url})`);
+      continue;
     }
 
     let rawProducts;
