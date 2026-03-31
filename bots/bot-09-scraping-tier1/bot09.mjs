@@ -119,6 +119,26 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
 // ════════════════════════════════════════════════════════════
 
 /**
+ * fetchDirect — ניסיון ישיר ללא ScraperAPI.
+ * @param {string} url
+ * @returns {Promise<string|null>}
+ */
+async function fetchDirect(url) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      signal: AbortSignal.timeout(15000),
+    })
+    if (res.ok) return await res.text()
+    return null
+  } catch { return null }
+}
+
+/**
  * fetchViaScraperAPI — מבצע GET דרך ScraperAPI ומחזיר HTML כטקסט.
  * אם ScraperAPI_KEY חסר, זורק שגיאה.
  *
@@ -559,9 +579,15 @@ export async function scrapeStore(storeConfig, logger) {
     logger.log(`[${name}] מביא: ${url}`);
     let html;
     try {
-      html = await fetchViaScraperAPI(url);
+      html = await fetchDirect(url);
+      if (html) {
+        logger.log(`[${name}] fetchDirect הצליח (${url})`);
+      } else {
+        logger.log(`[${name}] fetchDirect נכשל — עובר ל-ScraperAPI (${url})`);
+        html = await fetchViaScraperAPI(url);
+      }
     } catch (e) {
-      logger.err(`[${name}] fetchViaScraperAPI נכשל (${url}): ${e.message}`);
+      logger.err(`[${name}] fetch נכשל לחלוטין (${url}): ${e.message}`);
       continue; // ממשיך ל-URL הבא — לא עוצר את כל החנות
     }
 
