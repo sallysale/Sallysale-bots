@@ -158,237 +158,112 @@ async function fetchViaScraperAPI(targetUrl) {
   return res.text();
 }
 
-// ── H&M parser ───────────────────────────────────────────────
+// ── Universal parser — JSON-LD + OG + HTML fallback ───────────
 /**
- * parseHM — מחלץ מוצרים מ-HTML של H&M.
- * H&M משתמש ב-<article class="product-item"> עם data-title, data-price.
- * כ-fallback מחפשים <h3> ו-<a> עם מחירים.
+ * extractProductsFromHtml — parser אוניברסלי:
+ * 1. Schema.org JSON-LD (הכי אמין)
+ * 2. Open Graph meta tags
+ * 3. HTML data-price attributes
+ * 4. Link+price fallback
  */
-function parseHM(html, storeBaseUrl) {
-  const root     = parse(html);
-  const products = [];
+export function extractProductsFromHtml(html, storeUrl) {
+  const products = []
 
-  // H&M article-based structure
-  const articles = root.querySelectorAll('article');
-  for (const article of articles.slice(0, MAX_PER_STORE)) {
-    const titleEl   = article.querySelector('h3, h2, [class*="product-item__name"], [class*="product-name"]');
-    const linkEl    = article.querySelector('a[href]');
-    const imgEl     = article.querySelector('img[src]');
-    const priceEl   = article.querySelector('[class*="price--sale"], [class*="sale-price"], [class*="current-price"]');
-    const origEl    = article.querySelector('[class*="price--regular"], [class*="regular-price"], del, s');
-
-    const title        = titleEl?.text?.trim();
-    const rawPrice     = priceEl?.text?.trim() || '';
-    const rawOrigPrice = origEl?.text?.trim()  || '';
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgSrc       = imgEl?.getAttribute('src')   || imgEl?.getAttribute('data-src') || '';
-
-    const price     = cleanPrice(rawPrice);
-    const origPrice = cleanPrice(rawOrigPrice);
-
-    if (!title || !price) continue;
-
-    const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
+  // ── שלב 1: Schema.org JSON-LD ──────────────────────────────
+  const jsonLdMatches = html.matchAll(/<script[^>]+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)
+  for (const match of jsonLdMatches) {
+    try {
+      const data = JSON.parse(match[1])
+      const items = Array.isArray(data) ? data : [data]
+      for (const item of items) {
+        if (item['@type'] === 'Product' && item.offers && item.name) {
+          const offer = item.offers
+          products.push({
+            title:         item.name,
+            price:         parseFloat(offer.price || offer.lowPrice || 0),
+            originalPrice: parseFloat(offer.highPrice || 0) || parseFloat(offer.price || 0) * 1.3,
+            imageUrl:      Array.isArray(item.image) ? item.image[0] : item.image || '',
+            productUrl:    item.url || storeUrl,
+            description:   '',
+          })
+        } else if (item['@type'] === 'ItemList' && item.itemListElement) {
+          for (const el of item.itemListElement) {
+            const p = el.item || el
+            const offer = p.offers || p.offer
+            if (offer && p.name) {
+              products.push({
+                title:         p.name,
+                price:         parseFloat(offer.price || offer.lowPrice || 0),
+                originalPrice: parseFloat(offer.highPrice || offer.price || 0) * 1.3,
+                imageUrl:      Array.isArray(p.image) ? p.image[0] : p.image || '',
+                productUrl:    p.url || storeUrl,
+                description:   '',
+              })
+            }
+          }
+        }
+      }
+    } catch {}
   }
 
-  return products;
-}
+  if (products.length >= MAX_PER_STORE) return products.slice(0, MAX_PER_STORE)
 
-// ── Zara parser ───────────────────────────────────────────────
-/**
- * parseZara — מחלץ מוצרים מ-HTML של Zara.
- * Zara משתמש ב-<li class="product"> עם <a class="link">.
- */
-function parseZara(html, storeBaseUrl) {
-  const root     = parse(html);
-  const products = [];
-
-  const items = root.querySelectorAll('li[class*="product"], div[class*="product-grid-product"]');
-  for (const item of items.slice(0, MAX_PER_STORE)) {
-    const titleEl   = item.querySelector('[class*="product-grid-product-info__name"], h2, h3');
-    const linkEl    = item.querySelector('a[href]');
-    const imgEl     = item.querySelector('img');
-    const priceEl   = item.querySelector('[class*="price__amount--sale"], [class*="sale"]');
-    const origEl    = item.querySelector('[class*="price__amount--line-through"], del, s');
-
-    const title        = titleEl?.text?.trim();
-    const rawPrice     = priceEl?.text?.trim() || '';
-    const rawOrigPrice = origEl?.text?.trim()  || '';
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgSrc       = imgEl?.getAttribute('src')   || imgEl?.getAttribute('data-src') || '';
-
-    const price     = cleanPrice(rawPrice);
-    const origPrice = cleanPrice(rawOrigPrice);
-
-    if (!title || !price) continue;
-
-    const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
-  }
-
-  return products;
-}
-
-// ── Mango parser ──────────────────────────────────────────────
-/**
- * parseMango — מחלץ מוצרים מ-HTML של Mango.
- */
-function parseMango(html, storeBaseUrl) {
-  const root     = parse(html);
-  const products = [];
-
-  const items = root.querySelectorAll('[class*="product-item"], [class*="product-card"], article');
-  for (const item of items.slice(0, MAX_PER_STORE)) {
-    const titleEl   = item.querySelector('[class*="product-item__name"], [class*="name"], h3, h2');
-    const linkEl    = item.querySelector('a[href]');
-    const imgEl     = item.querySelector('img');
-    const priceEl   = item.querySelector('[class*="sale"], [class*="reduced"], [class*="offer-price"]');
-    const origEl    = item.querySelector('del, s, [class*="original"], [class*="old-price"]');
-
-    const title        = titleEl?.text?.trim();
-    const rawPrice     = priceEl?.text?.trim() || '';
-    const rawOrigPrice = origEl?.text?.trim()  || '';
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgSrc       = imgEl?.getAttribute('src')   || imgEl?.getAttribute('data-src') || '';
-
-    const price     = cleanPrice(rawPrice);
-    const origPrice = cleanPrice(rawOrigPrice);
-
-    if (!title || !price) continue;
-
-    const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
-  }
-
-  return products;
-}
-
-// ── IKEA parser ───────────────────────────────────────────────
-/**
- * parseIKEA — מחלץ מוצרים מ-HTML של IKEA (עמוד offers).
- * IKEA משתמש ב-<div class="range-offer-message"> ו-<article>.
- */
-function parseIKEA(html, storeBaseUrl) {
-  const root     = parse(html);
-  const products = [];
-
-  const items = root.querySelectorAll(
-    '[class*="plp-fragment-wrapper"], [class*="pip-product"], article, [class*="range-offer"]'
-  );
-  for (const item of items.slice(0, MAX_PER_STORE)) {
-    const titleEl   = item.querySelector('[class*="pip-header__label"], h3, h2, [class*="product-compact__name"]');
-    const linkEl    = item.querySelector('a[href]');
-    const imgEl     = item.querySelector('img');
-    const priceEl   = item.querySelector('[class*="pip-price__integer"], [class*="price"]');
-    const origEl    = item.querySelector('del, s, [class*="pip-price--previous"]');
-
-    const title        = titleEl?.text?.trim();
-    const rawPrice     = priceEl?.text?.trim() || '';
-    const rawOrigPrice = origEl?.text?.trim()  || '';
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgSrc       = imgEl?.getAttribute('src')   || imgEl?.getAttribute('data-src') || '';
-
-    const price     = cleanPrice(rawPrice);
-    const origPrice = cleanPrice(rawOrigPrice);
-
-    if (!title || !price) continue;
-
-    const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
-  }
-
-  return products;
-}
-
-// ── NET-A-PORTER parser ───────────────────────────────────────
-/**
- * parseNAP — מחלץ מוצרים מ-HTML של NET-A-PORTER.
- */
-function parseNAP(html, storeBaseUrl) {
-  const root     = parse(html);
-  const products = [];
-
-  const items = root.querySelectorAll(
-    '[class*="product-card"], [class*="productCard"], [class*="product-item"], li[data-product-id]'
-  );
-  for (const item of items.slice(0, MAX_PER_STORE)) {
-    const titleEl   = item.querySelector('[class*="product-card__name"], [class*="product-name"], h3, h2');
-    const linkEl    = item.querySelector('a[href]');
-    const imgEl     = item.querySelector('img');
-    const priceEl   = item.querySelector('[class*="sale-price"], [class*="price--sale"], [class*="price--red"]');
-    const origEl    = item.querySelector('[class*="was-price"], del, s, [class*="full-price"]');
-
-    const title        = titleEl?.text?.trim();
-    const rawPrice     = priceEl?.text?.trim() || '';
-    const rawOrigPrice = origEl?.text?.trim()  || '';
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgSrc       = imgEl?.getAttribute('src')   || imgEl?.getAttribute('data-src') || '';
-
-    const price     = cleanPrice(rawPrice);
-    const origPrice = cleanPrice(rawOrigPrice);
-
-    if (!title || !price) continue;
-
-    const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
-  }
-
-  return products;
-}
-
-// ── Generic parser ────────────────────────────────────────────
-/**
- * parseGeneric — parser כללי לחנויות ללא parser ייעודי.
- * מחלץ מוצרים לפי סלקטורים נפוצים.
- */
-export function parseGeneric(html, storeBaseUrl) {
-  const root = parse(html);
-  const products = [];
-
-  // ניסיון 1: article/li/div עם data-price
-  const candidates = root.querySelectorAll('[data-price],[data-sale-price],[data-original-price]');
-  for (const el of candidates.slice(0, MAX_PER_STORE)) {
-    const price        = parseFloat(el.getAttribute('data-price') || el.getAttribute('data-sale-price') || '0') || null;
-    const origPrice    = parseFloat(el.getAttribute('data-original-price') || '0') || null;
-    const titleEl      = el.querySelector('h2,h3,h4,[data-title],.product-title,.name');
-    const title        = titleEl?.text?.trim() || el.getAttribute('data-title') || '';
-    const linkEl       = el.querySelector('a[href]');
-    const href         = linkEl?.getAttribute('href') || '';
-    const imgEl        = el.querySelector('img[src],img[data-src]');
-    const imgSrc       = imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || '';
-    if (!title || !href) continue;
-    const productUrl   = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-    const imageUrl     = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc;
-    products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' });
-  }
-
-  // ניסיון 2 (fallback): כל link עם מחיר בתוכו
+  // ── שלב 2: Open Graph meta ────────────────────────────────
   if (products.length === 0) {
-    const links = root.querySelectorAll('a[href]');
-    for (const a of links.slice(0, MAX_PER_STORE * 3)) {
-      const text   = a.text?.trim() || '';
-      const href   = a.getAttribute('href') || '';
-      const priceM = text.match(/[\d,.]+/);
-      if (!priceM || !href || text.length < 4 || text.length > 200) continue;
-      const price  = parseFloat(priceM[0].replace(',', '.')) || null;
-      const productUrl = href.startsWith('http') ? href : `${storeBaseUrl}${href}`;
-      products.push({ title: text.slice(0, 120), price, originalPrice: null, productUrl, imageUrl: '', description: '' });
-      if (products.length >= MAX_PER_STORE) break;
+    const titleMatch = html.match(/<meta[^>]+property="og:title"[^>]+content="([^"]+)"/i)
+    const priceMatch = html.match(/<meta[^>]+property="product:price:amount"[^>]+content="([^"]+)"/i)
+    const imageMatch = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)
+    const urlMatch   = html.match(/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/i)
+    if (titleMatch && priceMatch) {
+      const price = parseFloat(priceMatch[1])
+      products.push({
+        title:         titleMatch[1],
+        price,
+        originalPrice: price * 1.3,
+        imageUrl:      imageMatch?.[1] || '',
+        productUrl:    urlMatch?.[1]   || storeUrl,
+        description:   '',
+      })
     }
   }
 
-  return products;
+  // ── שלב 3: HTML data-price attributes ────────────────────
+  if (products.length === 0) {
+    const root       = parse(html)
+    const candidates = root.querySelectorAll('[data-price],[data-sale-price],[data-original-price]')
+    for (const el of candidates.slice(0, MAX_PER_STORE)) {
+      const price     = parseFloat(el.getAttribute('data-price') || el.getAttribute('data-sale-price') || '0') || null
+      const origPrice = parseFloat(el.getAttribute('data-original-price') || '0') || null
+      const titleEl   = el.querySelector('h2,h3,h4,[data-title],.product-title,.name')
+      const title     = titleEl?.text?.trim() || el.getAttribute('data-title') || ''
+      const linkEl    = el.querySelector('a[href]')
+      const href      = linkEl?.getAttribute('href') || ''
+      const imgEl     = el.querySelector('img[src],img[data-src]')
+      const imgSrc    = imgEl?.getAttribute('src') || imgEl?.getAttribute('data-src') || ''
+      if (!title || !href) continue
+      const productUrl = href.startsWith('http') ? href : `${storeUrl}${href}`
+      const imageUrl   = imgSrc.startsWith('//') ? `https:${imgSrc}` : imgSrc
+      products.push({ title, price, originalPrice: origPrice, productUrl, imageUrl, description: '' })
+    }
+  }
+
+  // ── שלב 4: link+price fallback ───────────────────────────
+  if (products.length === 0) {
+    const root  = parse(html)
+    const links = root.querySelectorAll('a[href]')
+    for (const a of links.slice(0, MAX_PER_STORE * 3)) {
+      const text   = a.text?.trim() || ''
+      const href   = a.getAttribute('href') || ''
+      const priceM = text.match(/[\d,.]+/)
+      if (!priceM || !href || text.length < 4 || text.length > 200) continue
+      const price      = parseFloat(priceM[0].replace(',', '.')) || null
+      const productUrl = href.startsWith('http') ? href : `${storeUrl}${href}`
+      products.push({ title: text.slice(0, 120), price, originalPrice: null, productUrl, imageUrl: '', description: '' })
+      if (products.length >= MAX_PER_STORE) break
+    }
+  }
+
+  return products.slice(0, MAX_PER_STORE)
 }
 
 // ── עזר: בנה STORE_CONFIG מ-simple object ─────────────────────
@@ -402,7 +277,7 @@ function makeStore(name, url, country, category) {
     country,
     baseUrl:  origin,
     urls:     [url],
-    parser:   parseGeneric,
+    parser:   extractProductsFromHtml,
   };
 }
 
@@ -421,7 +296,7 @@ const STORE_CONFIGS = [
       'https://www2.hm.com/en_gb/sale/ladies.html',
       'https://www2.hm.com/en_gb/sale/men.html',
     ],
-    parser: parseHM,
+    parser: extractProductsFromHtml,
   },
   {
     name:     'Zara',
@@ -433,7 +308,7 @@ const STORE_CONFIGS = [
       'https://www.zara.com/gb/en/woman-specials-l1358.html',
       'https://www.zara.com/gb/en/man-specials-l1364.html',
     ],
-    parser: parseZara,
+    parser: extractProductsFromHtml,
   },
   {
     name:     'Mango',
@@ -444,7 +319,7 @@ const STORE_CONFIGS = [
     urls: [
       'https://shop.mango.com/gb/women/specials-new-collection',
     ],
-    parser: parseMango,
+    parser: extractProductsFromHtml,
   },
   {
     name:     'IKEA',
@@ -455,7 +330,7 @@ const STORE_CONFIGS = [
     urls: [
       'https://www.ikea.com/gb/en/offers/',
     ],
-    parser: parseIKEA,
+    parser: extractProductsFromHtml,
   },
   {
     name:     'NET-A-PORTER',
@@ -466,7 +341,7 @@ const STORE_CONFIGS = [
     urls: [
       'https://www.net-a-porter.com/en-gb/shop/sale',
     ],
-    parser: parseNAP,
+    parser: extractProductsFromHtml,
   },
 
   // ישראל — אלקטרוניקה
