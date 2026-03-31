@@ -15,6 +15,25 @@ const { parse } = pkg;
 import supabase from './shared/supabaseClient.mjs';
 import { createLogger } from './shared/logger.mjs';
 
+const STORE_ID_MAP = {
+  'H&M': 'hm', 'H&M IL': 'hm',
+  'Zara': 'zara', 'Zara IL': 'zara-il',
+  'Mango': 'mango',
+  'IKEA': 'ikea', 'IKEA IL': 'ikea-il',
+  'NET-A-PORTER': 'net-a-porter',
+  'KSP': 'ksp',
+  'Bug': 'bug',
+  'iDigital': 'idigital',
+  'Ivory': 'ivory',
+  'Home Center': 'homecenter',
+  'Super-Pharm': 'superpharm',
+  'Nike IL': 'nike-il',
+  'Fox': 'fox',
+  'Terminal X': 'terminalx',
+  'Terminalx': 'terminalx',
+  'Ace IL': 'ace-il',
+}
+
 const BOT_ID           = 'BOT-09';
 const DELAY_MS         = 2000;   // 2 שניות בין בקשות — לא לעמיס את ScraperAPI
 const MAX_PER_STORE    = 50;     // מקסימום מוצרים לחנות בהרצה אחת
@@ -96,6 +115,7 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
   return {
     id:            `scraper_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
     slug:          (product.title || storeName).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60) + '-' + Date.now(),
+    store:         STORE_ID_MAP[storeName] || storeName.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
     title_en:      product.title      || null,
     title_he:      null,               // יתורגם ע"י BOT-25
     store_display: storeName,
