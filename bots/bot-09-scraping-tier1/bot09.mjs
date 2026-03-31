@@ -196,6 +196,18 @@ async function fetchViaScraperAPI(targetUrl) {
   return res.text();
 }
 
+// ── URL normalizer ────────────────────────────────────────────
+function normalizeUrl(url, baseUrl) {
+  if (!url) return null
+  if (url.startsWith('http')) return url
+  if (url.startsWith('//')) return 'https:' + url
+  try {
+    const base = new URL(baseUrl)
+    if (url.startsWith('/')) return base.origin + url
+    return base.origin + '/' + url
+  } catch { return null }
+}
+
 // ── Universal parser — JSON-LD + OG + HTML fallback ───────────
 /**
  * extractProductsFromHtml — parser אוניברסלי:
@@ -221,7 +233,7 @@ export function extractProductsFromHtml(html, storeUrl) {
             price:         parseFloat(offer.price || offer.lowPrice || 0),
             originalPrice: parseFloat(offer.highPrice || 0) || parseFloat(offer.price || 0) * 1.3,
             imageUrl:      Array.isArray(item.image) ? item.image[0] : item.image || '',
-            productUrl:    item.url || storeUrl,
+            productUrl:    normalizeUrl(item.url, storeUrl) || storeUrl,
             description:   '',
           })
         } else if (item['@type'] === 'ItemList' && item.itemListElement) {
@@ -234,7 +246,7 @@ export function extractProductsFromHtml(html, storeUrl) {
                 price:         parseFloat(offer.price || offer.lowPrice || 0),
                 originalPrice: parseFloat(offer.highPrice || offer.price || 0) * 1.3,
                 imageUrl:      Array.isArray(p.image) ? p.image[0] : p.image || '',
-                productUrl:    p.url || storeUrl,
+                productUrl:    normalizeUrl(p.url, storeUrl) || storeUrl,
                 description:   '',
               })
             }
@@ -259,7 +271,7 @@ export function extractProductsFromHtml(html, storeUrl) {
         price,
         originalPrice: price * 1.3,
         imageUrl:      imageMatch?.[1] || '',
-        productUrl:    urlMatch?.[1]   || storeUrl,
+        productUrl:    normalizeUrl(urlMatch?.[1], storeUrl) || storeUrl,
         description:   '',
       })
     }
@@ -561,8 +573,8 @@ async function upsertDeals(payloads, logger) {
 
   // תיקון price overflow — אם מחיר נראה כסנטים (מעל 99,999) חלק ב-100
   for (const payload of payloads) {
-    if (payload.price > 99999) payload.price = Math.round(payload.price / 100);
-    if (payload.original_price && payload.original_price > 99999) payload.original_price = Math.round(payload.original_price / 100);
+    if (payload.price > 10000) payload.price = Math.round(payload.price / 100);
+    if (payload.original_price && payload.original_price > 10000) payload.original_price = Math.round(payload.original_price / 100);
   }
 
   const { data, error } = await supabase
