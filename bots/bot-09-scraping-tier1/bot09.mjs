@@ -567,7 +567,7 @@ async function upsertDeals(payloads, logger) {
 
   const { data, error } = await supabase
     .from('deals')
-    .upsert(payloads, { onConflict: 'product_url', ignoreDuplicates: false })
+    .upsert(payloads, { onConflict: 'slug', ignoreDuplicates: false })
     .select('id');
 
   if (error) {
@@ -605,7 +605,15 @@ async function main() {
       const payloads = await scrapeStore(storeConfig, logger);
 
       if (payloads.length > 0) {
-        const result = await upsertDeals(payloads, logger);
+        const unique = [];
+        const seen = new Set();
+        for (const p of payloads) {
+          if (!seen.has(p.slug)) {
+            seen.add(p.slug);
+            unique.push(p);
+          }
+        }
+        const result = await upsertDeals(unique, logger);
         stats.added   += result.added;
         stats.updated += result.updated;
       }
