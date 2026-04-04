@@ -146,7 +146,7 @@ export function buildDealPayload(product, storeName, categorySlug, currency, cou
     shipping_cost:  0,
     country:        country,
     in_stock:       true,
-    status:        (title_en && price && price > 0) ? 'published' : 'pending',
+    status:        (product.title && product.price && product.price > 0) ? 'published' : 'pending',
     source:        'scraper_t1',
     tags:          [storeName.toLowerCase(), categorySlug, 'sale'],
   };
